@@ -23,12 +23,17 @@ jobs:
         run: |
           cp kalama_hdk.dts kernel/arch/arm64/boot/dts/qcom/
           
+      - name: Find defconfig
+        run: |
+          cd kernel
+          ls arch/arm64/configs/ | grep -iE "kalam|sm8"
+          
       - name: Build kernel
         run: |
           cd kernel
           export CROSS_COMPILE=aarch64-linux-gnu-
           export ARCH=arm64
-          make kalama_defconfig
+          make $(ls arch/arm64/configs/ | grep -iE "kalam|sm8" | head -1 | sed 's/.gz//')
           make -j$(nproc)
           
       - name: Upload Image
