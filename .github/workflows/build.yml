@@ -29,7 +29,9 @@ jobs:
           cd kernel
           export CROSS_COMPILE=aarch64-linux-gnu-
           export ARCH=arm64
-          make dji_defconfig
+          cp ../config .config
+          scripts/config --disable WERROR
+          make olddefconfig
           make -j$(nproc)
           
       - name: Upload Image
