@@ -13,7 +13,7 @@ jobs:
       - name: Setup build tools
         run: |
           sudo apt update
-          sudo apt install -y gcc-aarch64-linux-gnu flex bison bc libssl-dev
+          sudo apt install -y gcc-aarch64-linux-gnu flex bison bc libssl-dev libelf-dev
           
       - name: Clone LineageOS kernel
         run: |
