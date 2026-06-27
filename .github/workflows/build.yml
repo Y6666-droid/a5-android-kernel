@@ -1,0 +1,23 @@
+name: Build Android Kernel
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Clone kernel source
+        run: git clone --depth 1 https://github.com/LineageOS/android_kernel_qcom_sm8550.git kernel
+      - name: Copy DJI device tree
+        run: cp kalama_hdk.dts kernel/arch/arm64/boot/dts/qcom/
+      - name: Build kernel
+        run: |
+          cd kernel
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          export ARCH=arm64
+          make kalama_defconfig
+          make -j$(nproc)
+      - name: Upload boot image
+        uses: actions/upload-artifact@v3
+        with:
+          name: kernel-image
+          path: kernel/arch/arm64/boot/Image.gz
