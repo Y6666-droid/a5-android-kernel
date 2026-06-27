@@ -19,21 +19,17 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/LineageOS/android_kernel_qcom_sm8550.git kernel
           
-      - name: Copy DJI device tree
+      - name: Copy DJI device tree and config
         run: |
           cp kalama_hdk.dts kernel/arch/arm64/boot/dts/qcom/
-          
-      - name: Find defconfig
-        run: |
-          cd kernel
-          ls arch/arm64/configs/ | grep -iE "kalam|sm8"
+          cp config kernel/arch/arm64/configs/dji_defconfig
           
       - name: Build kernel
         run: |
           cd kernel
           export CROSS_COMPILE=aarch64-linux-gnu-
           export ARCH=arm64
-          make $(ls arch/arm64/configs/ | grep -iE "kalam|sm8" | head -1 | sed 's/.gz//')
+          make dji_defconfig
           make -j$(nproc)
           
       - name: Upload Image
