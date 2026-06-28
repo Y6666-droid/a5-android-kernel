@@ -9,11 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Find defconfig
-        run: |
-          cd kernel
-          ls arch/arm64/configs/ | grep -iE "kalam|sm8|qcom"
           
       - name: Setup build tools
         run: |
@@ -23,6 +18,11 @@ jobs:
       - name: Clone LineageOS kernel
         run: |
           git clone --depth 1 https://github.com/LineageOS/android_kernel_qcom_sm8550.git kernel
+
+      - name: Find defconfig
+        run: |
+          cd kernel
+          ls arch/arm64/configs/ | grep -iE "kalam|sm8|qcom"
           
       - name: Copy DJI device tree
         run: |
