@@ -1,4 +1,4 @@
-name: Build Android Kernel
+name: Build Android Kernel with DJI DTS
 on:
   push:
     branches: [ main ]
@@ -19,10 +19,10 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/LineageOS/android_kernel_qcom_sm8550.git kernel
           
-      - name: Copy DJI device tree and config
+      - name: Copy DJI device tree
         run: |
           cp kalama_hdk.dts kernel/arch/arm64/boot/dts/qcom/
-          cp config kernel/arch/arm64/configs/dji_defconfig
+          echo 'dtb-$(CONFIG_ARCH_QCOM) += kalama_hdk.dtb' >> kernel/arch/arm64/boot/dts/qcom/Makefile
           
       - name: Build kernel
         run: |
@@ -33,10 +33,12 @@ jobs:
           scripts/config --disable WERROR
           scripts/config --disable DEBUG_INFO_BTF
           make olddefconfig
-          make -j$(nproc)
+          make -j$(nproc) Image.gz dtbs
           
-      - name: Upload Image
+      - name: Upload Image and DTB
         uses: actions/upload-artifact@v4
         with:
-          name: kernel-Image
-          path: kernel/arch/arm64/boot/Image
+          name: kernel-dji-dts
+          path: |
+            kernel/arch/arm64/boot/Image.gz
+            kernel/arch/arm64/boot/dts/qcom/kalama_hdk.dtb
