@@ -21,8 +21,8 @@ jobs:
           
       - name: Copy DJI device tree
         run: |
-          cp kalama_hdk.dts kernel/arch/arm64/boot/dts/qcom/
-          echo 'dtb-$(CONFIG_ARCH_QCOM) += kalama_hdk.dtb' >> kernel/arch/arm64/boot/dts/qcom/Makefile
+          cp kalama_clean.dts kernel/arch/arm64/boot/dts/qcom/
+          echo 'dtb-$(CONFIG_ARCH_QCOM) += kalama_clean.dtb' >> kernel/arch/arm64/boot/dts/qcom/Makefile
           
       - name: Build kernel
         run: |
