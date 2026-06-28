@@ -34,9 +34,8 @@ jobs:
           cd kernel
           export CROSS_COMPILE=aarch64-linux-gnu-
           export ARCH=arm64
-          cp ../config .config
-          scripts/config --disable WERROR
-          scripts/config --disable DEBUG_INFO_BTF
+          make gki_defconfig
+          ./scripts/kconfig/merge_config.sh .config arch/arm64/configs/kalama_le_gki.fragment
           make olddefconfig
           make -j$(nproc) Image.gz dtbs
           
