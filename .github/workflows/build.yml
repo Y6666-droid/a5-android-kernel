@@ -41,4 +41,4 @@ jobs:
           name: kernel-dji-dts
           path: |
             kernel/arch/arm64/boot/Image.gz
-            kernel/arch/arm64/boot/dts/qcom/kalama_hdk.dtb
+            kernel/arch/arm64/boot/dts/qcom/kalama_clean.dtb
