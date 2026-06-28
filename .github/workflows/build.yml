@@ -31,6 +31,7 @@ jobs:
           export ARCH=arm64
           cp ../config .config
           scripts/config --disable WERROR
+          scripts/config --disable DEBUG_INFO_BTF
           make olddefconfig
           make -j$(nproc)
           
