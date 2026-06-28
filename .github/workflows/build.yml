@@ -31,6 +31,7 @@ jobs:
           ./scripts/kconfig/merge_config.sh .config arch/arm64/configs/kalama_le_gki.fragment
           scripts/config --disable WERROR
           scripts/config --disable DEBUG_INFO_BTF
+          scripts/config --disable DEBUG_INFO
           make olddefconfig
           make -j$(nproc) Image.gz dtbs
           
