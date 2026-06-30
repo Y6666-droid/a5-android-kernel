@@ -1,4 +1,4 @@
-name: Build Kernel with USER_NS
+name: Build Android Kernel
 on:
   push:
     branches: [ main ]
@@ -21,26 +21,23 @@ jobs:
           
       - name: Copy DJI device tree and config
         run: |
-          cp kalama_clean.dts kernel/arch/arm64/boot/dts/qcom/
-          echo 'dtb-$(CONFIG_ARCH_QCOM) += kalama_clean.dtb' >> kernel/arch/arm64/boot/dts/qcom/Makefile
+          cp kalama_hdk.dts kernel/arch/arm64/boot/dts/qcom/
           cp config kernel/arch/arm64/configs/dji_defconfig
           
-      - name: Build kernel with USER_NS
+      - name: Build kernel
         run: |
           cd kernel
           export CROSS_COMPILE=aarch64-linux-gnu-
           export ARCH=arm64
-          make dji_defconfig
+          cp ../config .config
           scripts/config --disable WERROR
           scripts/config --disable DEBUG_INFO_BTF
           scripts/config --enable USER_NS
           make olddefconfig
-          make -j$(nproc) Image.gz dtbs
+          make -j$(nproc) Image.gz
           
-      - name: Upload
+      - name: Upload Image
         uses: actions/upload-artifact@v4
         with:
-          name: kernel-user-ns
-          path: |
-            kernel/arch/arm64/boot/Image.gz
-            kernel/arch/arm64/boot/dts/qcom/kalama_clean.dtb
+          name: kernel-Image
+          path: kernel/arch/arm64/boot/Image
