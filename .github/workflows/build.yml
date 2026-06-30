@@ -33,8 +33,8 @@ jobs:
           scripts/config --disable WERROR
           scripts/config --disable DEBUG_INFO_BTF
           scripts/config --enable USER_NS
-          make olddefconfig
-          make -j$(nproc) Image.gz
+          # 不要 make olddefconfig，直接回答所有新配置选项为默认
+          yes "" | make -j$(nproc) Image.gz
           
       - name: Upload Image
         uses: actions/upload-artifact@v4
