@@ -1,5 +1,7 @@
-name: Build with DJI config and DJI DTS userns
+name: Build Kernel with USER_NS
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -23,22 +25,22 @@ jobs:
           echo 'dtb-$(CONFIG_ARCH_QCOM) += kalama_clean.dtb' >> kernel/arch/arm64/boot/dts/qcom/Makefile
           cp config kernel/arch/arm64/configs/dji_defconfig
           
-       - name: Build kernel
-  run: |
-    cd kernel
-    export CROSS_COMPILE=aarch64-linux-gnu-
-    export ARCH=arm64
-    make dji_defconfig
-    scripts/config --disable WERROR
-    scripts/config --disable DEBUG_INFO_BTF
-    scripts/config --enable USER_NS
-    make olddefconfig
-    make -j$(nproc) Image.gz dtbs
+      - name: Build kernel with USER_NS
+        run: |
+          cd kernel
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          export ARCH=arm64
+          make dji_defconfig
+          scripts/config --disable WERROR
+          scripts/config --disable DEBUG_INFO_BTF
+          scripts/config --enable USER_NS
+          make olddefconfig
+          make -j$(nproc) Image.gz dtbs
           
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: dji-config-kernel
+          name: kernel-user-ns
           path: |
             kernel/arch/arm64/boot/Image.gz
             kernel/arch/arm64/boot/dts/qcom/kalama_clean.dtb
